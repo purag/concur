@@ -15,10 +15,11 @@ Currently, each thread is just a generator function which `yield`s at any point 
 Technically this is non-preemptive scheduling, since if we had no `yield`s the threads would run in full. But the plan is to write a compiler that will look for specific directives and spit out a file with yields following every statement/expression, allowing for random context switches at any time.
 
 ## TODO
-* implement `join`
+* ~~implement `join`~~
 * implement `fork`
 * remove the need to call `thread.manager()`
-* implement `finish`
+ * concur now stipulates that there be a main thread from which all other threads fork. it makes the code a bit nicer, and I may streamline the creation of the main thread in the future (so that it is more of a specialized thread than a normal one), which should take care of the call to `thread.manager()`.
+* ~~implement `finish`~~
 * better scheduling algo!
 * write a compiler from js to concur-ready js
 
