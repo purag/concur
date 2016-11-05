@@ -8,6 +8,9 @@ node concur.js
 
 You can try running `concur.js` a few times and see different results each time as it context switches on a timer!
 
+## how it works
+Currently, each thread is just a generator function which `yield`s at any point (between any two statements). we drop back into a thread manager which checks how much time elapsed, and if it's beyond the threshold of 1ms, we context switch. threads are scheduled in FIFO order. additionally, once a thread finishes (returns from the function rather than yield), we stop scheduling it (duh).
+
 ## caveats
 Technically this is non-preemptive scheduling, since if we had no `yield`s the threads would run in full. But the plan is to write a compiler that will look for specific directives and spit out a file with yields following every statement/expression, allowing for random context switches at any time.
 
