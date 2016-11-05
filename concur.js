@@ -1,5 +1,7 @@
 function thread (f) {
   f = f();
+  var waiting;
+  var status;
   thread.ready.push(this);
 
   this.run = (function* () {
@@ -9,11 +11,22 @@ function thread (f) {
       yield
     }
   })();
+
+  this.join = function () {
+    if (status == "finished") return;
+    waiting = thread.current;
+    thread.current = null;
+  };
+
+  this.finish = function () {
+    if (waiting) thread.ready.push(waiting);
+    thread.current = null;
+    status = "finished";
+  };
 }
 
 thread.ready = [];
 thread.current = null;
-thread.running = false;
 thread.manager = function () {
   var c_switch = false;
   while (1) {
@@ -28,30 +41,14 @@ thread.manager = function () {
     var end = new Date();
 
     if (status.done) {
-      thread.current = null;
+      thread.current.finish();
       if (!thread.ready.length) break;
     }
 
-    if (end - st >= 1) {
+    if (end - st >= 1 || !thread.current) {
       c_switch = true;
     }
   }
 };
 
-new thread(function* () {
-  var i = 0;                yield
-  while (i < 50) {          yield
-    console.log("== ping"); yield
-    i++;                    yield
-  }
-});
-
-new thread(function* () {
-  var i = 0;                yield
-  while (i < 50) {          yield
-    console.log("pong =="); yield
-    i++;                    yield
-  }
-});
-
-thread.manager();
+module.exports = thread;
