@@ -23,5 +23,8 @@ Technically this is non-preemptive scheduling, since if we had no `yield`s the t
 * better scheduling algo!
 * write a compiler from js to concur-ready js
 
+### ideas?
+* implement `concur(context, func[, func[, ...func]])` to execute the argument functions concurrently. `context` is the shared context between the functions. each `func` takes a context as its sole argument.
+
 ## why?
 I'm currently taking an operating systems class at UC San Diego where we learned about user- and kernel-level threads. I wanted to try my hand at user-level threads in JavaScript, since it could probably be pretty useful.
